@@ -10,8 +10,13 @@ import {
   HttpCode,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import {
+  CreateUserDto,
+  CreateUserSchema,
+  UpdateUserDto,
+  UpdateUserSchema,
+} from './dto/user.dto';
+import { ZodPipe } from '@lib/pipe';
 
 @Controller('users')
 export class UsersController {
@@ -19,7 +24,10 @@ export class UsersController {
 
   @Post()
   @HttpCode(201)
-  create(@Body() createUserDto: CreateUserDto, @Res() res) {
+  create(
+    @Body(new ZodPipe(CreateUserSchema)) createUserDto: CreateUserDto,
+    @Res() res,
+  ) {
     return res.send(this.usersService.create(createUserDto));
   }
 
@@ -34,7 +42,10 @@ export class UsersController {
   }
 
   @Put(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  update(
+    @Param('id') id: string,
+    @Body(new ZodPipe(UpdateUserSchema)) updateUserDto: UpdateUserDto,
+  ) {
     return this.usersService.update(id, updateUserDto);
   }
 

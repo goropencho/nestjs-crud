@@ -1,1 +1,2 @@
-export * from './all-exceptions.filter';
+export * from './all-exception.filter';
+export * from './zod-exception.filter';
