@@ -5,6 +5,7 @@ import { UsersModule } from './users/users.module';
 import { EnvModule } from './env/env.module';
 import { ConfigModule } from '@nestjs/config';
 import { envSchema } from './env/env';
+import { LoggerModule } from '@lib/loggers';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { envSchema } from './env/env';
     }),
     EnvModule,
     UsersModule,
+    LoggerModule,
   ],
   controllers: [AppController],
   providers: [AppService],

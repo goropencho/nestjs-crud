@@ -4,13 +4,13 @@ import { ValidationPipe, Logger } from '@nestjs/common';
 import { AllExceptionFilters, ZodExceptionFilters } from '@lib/filters';
 import { ResponseInterceptor } from '@lib/interceptors';
 import { ConfigService } from '@nestjs/config';
-import { env } from '@lib/enums';
+import { EnvKeys } from '@lib/enums';
 
 async function bootstrap() {
   const logger = new Logger();
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
-  const port = configService.get(env.PORT) || 3000;
+  const port = configService.get(EnvKeys.PORT) || 3000;
   app.useGlobalPipes(new ValidationPipe());
   app.useGlobalInterceptors(new ResponseInterceptor());
   app.useGlobalFilters(new ZodExceptionFilters(), new AllExceptionFilters());
