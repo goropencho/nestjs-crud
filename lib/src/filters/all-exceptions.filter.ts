@@ -22,7 +22,7 @@ export class AllExceptionFilters implements ExceptionFilter {
         : HttpStatus.INTERNAL_SERVER_ERROR;
 
     const errorResponse = {
-      statusCode: status,
+      success: false,
       timestamp: new Date().toString(),
       path: request.url,
       method: request.method,
@@ -33,7 +33,14 @@ export class AllExceptionFilters implements ExceptionFilter {
       stack: exception instanceof Error ? exception.stack : '',
     };
 
-    const logFilePath = path.join(__dirname, '../../../logs/error.log');
+    const cwd = process.cwd();
+    const logFileDirectory = path.join(cwd + '/public/logs');
+
+    if (!fs.existsSync(logFileDirectory)) {
+      fs.mkdirSync(logFileDirectory, { recursive: true });
+    }
+    const fileName = `${new Date().getFullYear()}-${new Date().getMonth() + 1}-${new Date().getDate()}.txt`;
+    const logFilePath = path.join(logFileDirectory, fileName);
     const logMessage = `${errorResponse.timestamp} - ${errorResponse.method} ${errorResponse.path} - ${errorResponse.message}\nStack: ${errorResponse.stack}\n\n`;
     fs.appendFileSync(logFilePath, logMessage);
 

@@ -13,22 +13,15 @@ export class ResponseInterceptor implements NestInterceptor {
     context: ExecutionContext,
     next: CallHandler<any>,
   ): Observable<any> | Promise<Observable<any>> {
-    return next
-      .handle()
-      .pipe(map((res: unknown) => this.responseHandler(res, context)));
+    return next.handle().pipe(map((res: unknown) => this.responseHandler(res)));
   }
 
-  responseHandler(res: any, context: ExecutionContext) {
-    const ctx = context.switchToHttp();
-    const response = ctx.getResponse();
-    const statusCode = response?.statusCode;
-
+  responseHandler(res: any) {
     return {
       success: true,
-      code: statusCode,
-      message: res?.message,
-      response: res?.data,
-      errors: null,
+      message: res?.message ?? 'Request Fulfilled',
+      data: res,
+      meta: res?.meta, // Pagination Data should be sent in this
     };
   }
 }
